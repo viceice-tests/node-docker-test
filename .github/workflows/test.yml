@@ -1,0 +1,38 @@
+name: test
+
+on:
+  push:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: ${{ format('windows-{0}', matrix.os) }}
+
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        os: [2019, 2022]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.15.0
+
+      - name: prepare
+        run: pwsh -file ./prepare.ps1
+
+      - name: native test
+        shell: pwsh
+        run: ./node -e 'require("@swc/core-win32-x64-msvc")'
+
+      - name: docker test
+        shell: pwsh
+        run: docker run --rm -it -v ${PWD}:c:\app -w c:\app mcr.microsoft.com/windows/servercore:ltsc${{matrix.os}} node -e "require('@swc/core-win32-x64-msvc')"
