@@ -36,4 +36,4 @@ jobs:
 
       - name: docker test
         shell: pwsh
-        run: docker run --rm -it -v ${PWD}:c:\app -w c:\app mcr.microsoft.com/windows/servercore:ltsc${{matrix.os}} node -e "require('@swc/core-win32-x64-msvc')"
+        run: docker run --rm -v ${PWD}:c:\app -w c:\app mcr.microsoft.com/windows/servercore:ltsc${{matrix.os}} node -e "require('@swc/core-win32-x64-msvc')"
