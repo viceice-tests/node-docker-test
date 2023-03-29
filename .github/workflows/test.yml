@@ -17,6 +17,7 @@ jobs:
     timeout-minutes: 15
 
     strategy:
+      fail-fast: false
       matrix:
         os: [2019, 2022]
 
@@ -31,7 +32,7 @@ jobs:
 
       - name: native test
         shell: pwsh
-        run: ./node -e 'require("@swc/core-win32-x64-msvc")'
+        run: ./node -e "require('@swc/core-win32-x64-msvc')"
 
       - name: docker test
         shell: pwsh
